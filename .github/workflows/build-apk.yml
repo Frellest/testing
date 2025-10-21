@@ -3,8 +3,6 @@ name: Build Android APK
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
 
 jobs:
   build:
@@ -12,7 +10,7 @@ jobs:
     
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4  # 👈 ОБНОВИ НА v4
       
     - name: Setup Python
       uses: actions/setup-python@v4
@@ -26,7 +24,8 @@ jobs:
       run: flet build apk --build-name "1.0.0" --build-number ${{ github.run_number }}
         
     - name: Upload APK
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4  # 👈 ОБНОВИ НА v4
       with:
         name: flet-notification-app
         path: build/apk/*.apk
+        
