@@ -21,7 +21,7 @@ jobs:
       run: pip install flet
         
     - name: Build APK
-      run: flet build apk --name "Notification App" --version "1.0.0"
+      run: flet build apk
         
     - name: Upload APK
       uses: actions/upload-artifact@v4
