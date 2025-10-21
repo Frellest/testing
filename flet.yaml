@@ -1,0 +1,14 @@
+name: Flet Notification App
+description: Test app with notifications
+publish_to: none
+
+environment:
+  android:
+    permissions:
+      - android.permission.POST_NOTIFICATIONS
+    min_sdk: 21
+    target_sdk: 33
+    enable_notifications: true
+
+icons:
+  android: "assets/icon.png"
