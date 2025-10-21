@@ -1,0 +1,32 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install Flet
+      run: pip install flet
+        
+    - name: Build APK
+      run: flet build apk --build-name "1.0.0" --build-number ${{ github.run_number }}
+        
+    - name: Upload APK
+      uses: actions/upload-artifact@v3
+      with:
+        name: flet-notification-app
+        path: build/apk/*.apk
