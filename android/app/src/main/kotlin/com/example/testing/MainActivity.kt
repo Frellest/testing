@@ -1,4 +1,4 @@
-package com.example.androidgo_test
+package com.example.testing
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
