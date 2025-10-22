@@ -1,4 +1,4 @@
-name: Build Android APK
+name: Build Test APK
 
 on:
   push:
@@ -9,31 +9,20 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Checkout code
+    - name: Checkout
       uses: actions/checkout@v4
       
-    - name: Setup Flutter
-      uses: subosito/flutter-action@v2
-      with:
-        flutter-version: '3.29.2'
-        cache: true
-        
-    - name: Setup Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
-        
-    - name: Install dependencies
-      run: |
-        pip install flet==0.28.3
-        pip install pyjnius
-        
+    - name: Install Flet
+      run: pip install flet
+      
+    - name: Clean build
+      run: rm -rf build/
+      
     - name: Build APK
-      run: |
-        flet build apk --verbose --build-version 1
-        
+      run: flet build apk --verbose
+      
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
-        name: app-apk
+        name: test-apk
         path: build/apk/*.apk
