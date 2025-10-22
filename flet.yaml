@@ -1,5 +1,5 @@
-name: androidgo_test
-description: Test for Android Go
+name: testing
+description: Voice notes app
 publish-to: none
 version: 1.0.0+1
 
@@ -13,7 +13,7 @@ flutter:
   uses-material-design: true
 
 android:
-  package: "com.example.androidgo_test"
+  package: "com.example.testing"
   min-sdk-version: 21
   target-sdk-version: 33
   compile-sdk-version: 33
@@ -23,7 +23,6 @@ android:
     - android.permission.RECORD_AUDIO
     - android.permission.POST_NOTIFICATIONS
     - android.permission.VIBRATE
-
   splash_color: "#2196F3"
 
 ios:
