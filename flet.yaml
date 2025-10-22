@@ -4,17 +4,34 @@ publish-to: none
 version: 1.0.0+1
 
 environment:
-  sdk: '>=2.19.0 <4.0.0'
+  sdk: '>=3.0.0 <4.0.0'
 
 dependencies:
-  flet: any
+  flet: ^1.0.0
 
 flutter:
   uses-material-design: true
 
 android:
   min-sdk-version: 21
-  target-sdk-version: 30
+  target-sdk-version: 33
+  compile-sdk-version: 33
   enable-jetifier: true
   permissions:
     - android.permission.INTERNET
+    - android.permission.RECORD_AUDIO
+    - android.permission.WRITE_EXTERNAL_STORAGE
+    - android.permission.READ_EXTERNAL_STORAGE
+    - android.permission.POST_NOTIFICATIONS
+    - android.permission.VIBRATE
+    - android.permission.WAKE_LOCK
+    - android.permission.FOREGROUND_SERVICE
+
+  splash_color: "#2196F3"
+  enable_software_rendering: false
+
+ios:
+  deployment-target: "11.0"
+
+web:
+  route-url-strategy: hash
