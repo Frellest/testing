@@ -1,14 +1,23 @@
-name: Flet Notification App
-description: Test app with notifications
-publish_to: none
+name: notification_test
+description: Flet app testing Pyjnius notifications
+publish-to: none
 
+version: 1.0.0
 environment:
-  android:
-    permissions:
-      - android.permission.POST_NOTIFICATIONS
-    min_sdk: 21
-    target_sdk: 33
-    enable_notifications: true
+  sdk: '>=2.19.0 <4.0.0'
 
-icons:
-  android: "assets/icon.png"
+dependencies:
+  flet: ^0.28.3
+
+dev-dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
+
+permissions:
+  - android.permission.VIBRATE
+  - android.permission.POST_NOTIFICATIONS
+  - android.permission.WAKE_LOCK
