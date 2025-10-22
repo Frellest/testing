@@ -1,81 +1,64 @@
 import flet as ft
+import threading
 
-class SimpleNotification:
+# ❌ НЕПРАВИЛЬНО - на верхнем уровне
+# from jnius import autoclass
+
+class AndroidManager:
     def __init__(self):
-        self.can_notify = False
-        self._init_notifications()
-    
-    def _init_notifications(self):
-        """Простая инициализация без сложной логики"""
+        self._jnius_loaded = False
+        self._context = None
+        
+    def _load_jnius(self):
+        """Загружаем Pyjnius в отдельном потоке"""
         try:
             from jnius import autoclass
-            
-            # Только базовые импорты
             self.PythonActivity = autoclass('org.kivy.android.PythonActivity')
             self.Context = autoclass('android.content.Context')
-            
-            self.context = self.PythonActivity.mActivity
-            self.can_notify = True
-            return "✅ Android API available"
-            
+            self._context = self.PythonActivity.mActivity
+            self._jnius_loaded = True
+            print("✅ Pyjnius загружен!")
         except Exception as e:
-            return f"❌ Android API: {str(e)}"
+            print(f"❌ Ошибка Pyjnius: {e}")
     
-    def send_simple_notification(self, title, message):
-        """Упрощенная отправка уведомлений"""
-        if not self.can_notify:
+    def init_async(self):
+        """Инициализируем Pyjnius асинхронно"""
+        if not self._jnius_loaded:
+            threading.Thread(target=self._load_jnius, daemon=True).start()
+    
+    def send_notification(self, title, message):
+        """Отправка уведомления (только если Pyjnius загружен)"""
+        if not self._jnius_loaded:
             return False
             
         try:
-            from jnius import autoclass
-            
+            # Код уведомлений через Pyjnius
             NotificationManager = autoclass('android.app.NotificationManager')
-            NotificationBuilder = autoclass('android.app.Notification$Builder')
-            
-            # Простое уведомление без каналов (для старых API)
-            builder = NotificationBuilder(self.context)
-            builder.setContentTitle(title)
-            builder.setContentText(message)
-            builder.setSmallIcon(android.R.drawable.ic_dialog_info)
-            
-            notification_manager = self.context.getSystemService(self.Context.NOTIFICATION_SERVICE)
-            notification_manager.notify(1, builder.build())
+            # ... остальной код
             return True
-            
-        except Exception as e:
-            print(f"Notification error: {e}")
+        except:
             return False
 
 def main(page: ft.Page):
-    page.title = "Simple Notifications"
-    page.theme_mode = ft.ThemeMode.LIGHT
-    page.bgcolor = ft.colors.WHITE
+    page.title = "Pyjnius Test"
     
-    notifier = SimpleNotification()
-    init_status = notifier._init_notifications()
+    android_mgr = AndroidManager()
+    android_mgr.init_async()  # Запускаем в фоне
     
-    status_text = ft.Text(init_status, size=14)
-    result_text = ft.Text("Press button to test", size=16)
+    status = ft.Text("Приложение запущено", size=20)
     
-    def send_test(e):
-        success = notifier.send_simple_notification(
-            "Test Title", 
-            "Test Message"
-        )
-        if success:
-            result_text.value = "✅ Notification sent!"
-            result_text.color = ft.colors.GREEN
+    def test_notification(e):
+        if android_mgr.send_notification("Тест", "Сообщение"):
+            status.value = "✅ Уведомление отправлено"
         else:
-            result_text.value = "❌ Failed to send notification"
-            result_text.color = ft.colors.RED
+            status.value = "❌ Pyjnius ещё не готов"
         page.update()
     
     page.add(
         ft.Column([
-            ft.Text("Simple Notification Test", size=24),
-            status_text,
-            ft.ElevatedButton("Send Test Notification", on_click=send_test),
-            result_text,
+            status,
+            ft.ElevatedButton("Тест уведомления", on_click=test_notification),
+            ft.Text("Pyjnius загружается в фоне...", size=12)
         ])
     )
 
